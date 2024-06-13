@@ -6,8 +6,6 @@ For å installere, kreves et python-miljø. Python 3 (testet på python3.10) anb
 
     ./setup.sh
 
-    pip install -i requirements.txt
-
 For å kjøre en prøveidentifisering kan du gi et filnavn som en parameter til identify.py-skriptet ved å bruke -f-alternativet som følgende:
 
     python3 identify.py -f norwegian_text.txt
