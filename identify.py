@@ -92,6 +92,12 @@ def get_file_content(f):
         c=ff.read(3000).replace("\n"," ").replace("\r","")
     return c
 
+def get_file_content_full(f):
+    c=None
+    with open(f,"r") as ff:
+        c=ff.read().replace("\n"," ").replace("\r","")
+    return c
+
 def main():
     global use_single_new_line
     global use_only_beginning
@@ -117,7 +123,7 @@ def main():
             load_model()
             lang="err"
             try:
-                lang=identify_language_single(args.filename)
+                lang=identify_language_single(get_file_content_full(args.filename))
             except:
                 pass
             print(args.filename + "\t" + lang)
