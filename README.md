@@ -20,3 +20,8 @@ CUDA-basert GPU anbefales. For å stille inn batchstørrelsen, bruk følgende:
 
 Dette proseserer 16 filer som er en batch. Directorymoden bruker bare beginnelsen av filer.
 
+# License
+
+[MIT license](https://github.com/textlab/norwegian_ml_tagger/blob/master/LICENSE)
+
+
