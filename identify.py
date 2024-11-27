@@ -74,6 +74,7 @@ def identify_language(one_batch):
     global segmentation_classifier
     global segmentation_tokenizer
     global segmentation_device
+    global int_segmentation_device
     global segmentation_model
     global ID2LABEL
 
@@ -84,6 +85,13 @@ def identify_language(one_batch):
     labels = outputs.logits.argmax(-1)
     non_zeros=[torch.nonzero(labels[i]).size()[0] for i in range(len(labels))]
     sums=torch.sum(labels, dim=1)
+
+    # Remove allocated GPU memory
+    if int_segmentation_device!=-1:
+        encoded_input=encoded_input.to("cpu")
+        labels=labels.to("cpu")
+        torch.cuda.empty_cache()
+
     return [ ID2LABEL["2"] if sums[i]/non_zeros[i]>=1.5 else ID2LABEL["1"]  for i in range(len(sums))]
 
 def get_file_content(f):
