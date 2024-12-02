@@ -122,7 +122,7 @@ def main():
     args = parser.parse_args()
     batch_size=args.batch_size
 
-    if args.filename is not None:
+    if args.filename:
         if os.path.isfile(args.filename):
             load_model()
             lang="err"
@@ -135,7 +135,7 @@ def main():
             eprint("The file " + args.filename + " could not be found.")
             exit(1)
 
-    elif args.dirname is not None:
+    elif args.dirname:
         files = pathlib.Path(args.dirname)
         model_loaded=False
         b=0
