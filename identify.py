@@ -116,15 +116,11 @@ def main():
                     help="single file to process", metavar="FILE")
     parser.add_argument("-d", "--dir", dest="dirname",
                     help="directory to process each file in it recursively. This option uses only the beginning of each file in identification.", metavar="FILE")
-    parser.add_argument('-b','--batch-size', action="store", default="8",type=str, required=False, help='Batch size for the GPU tasks. Only processed in -o mode.')
+    parser.add_argument('-b','--batch-size', default=8, type=int, required=False,
+                        help='Batch size for the GPU tasks. Only used in -d mode.')
 
     args = parser.parse_args()
-
-    if args.batch_size is not None:
-        try:
-            batch_size=int(args.batch_size)
-        except:
-            pass
+    batch_size=args.batch_size
 
     if args.filename is not None:
         if os.path.isfile(args.filename):
