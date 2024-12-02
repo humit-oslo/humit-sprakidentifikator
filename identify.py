@@ -40,7 +40,7 @@ def load_model():
     global int_segmentation_device
     global MODEL_PATH
 
-    segmentation_tokenizer =  BertTokenizerFast.from_pretrained('NbAiLab/nb-bert-base')
+    segmentation_tokenizer =  BertTokenizerFast.from_pretrained("NbAiLab/nb-bert-base")
     segmentation_tokenizer.model_max_length=512
 
     segmentation_model = AutoModelForTokenClassification.from_pretrained(MODEL_PATH)
@@ -116,8 +116,8 @@ def main():
                     help="single file to process", metavar="FILE")
     parser.add_argument("-d", "--dir", dest="dirname",
                     help="directory to process each file in it recursively. This option uses only the beginning of each file in identification.", metavar="FILE")
-    parser.add_argument('-b','--batch-size', default=8, type=int, required=False,
-                        help='Batch size for the GPU tasks. Only used in -d mode.')
+    parser.add_argument("-b","--batch-size", default=8, type=int, required=False,
+                        help="Batch size for the GPU tasks. Only used in -d mode.")
 
     args = parser.parse_args()
     batch_size=args.batch_size
@@ -159,5 +159,5 @@ def main():
     else:
         parser.print_help()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
