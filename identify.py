@@ -1,5 +1,5 @@
 from transformers import BertTokenizerFast
-from transformers import pipeline, AutoModelForTokenClassification, BertTokenizerFast 
+from transformers import pipeline, AutoModelForTokenClassification, BertTokenizerFast
 import os
 import torch
 import sys
@@ -20,7 +20,7 @@ segmentation_device="cpu"
 if torch.cuda.is_available():
     if torch.cuda.device_count()>0:
         int_segmentation_device=0
-        segmentation_device="cuda:0"        
+        segmentation_device="cuda:0"
 
 segmentation_tokenizer=None
 segmentation_model=None
@@ -110,7 +110,7 @@ def main():
     global use_single_new_line
     global use_only_beginning
     global batch_size
- 
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", dest="filename",
                     help="single file to process", metavar="FILE")
