@@ -1,5 +1,5 @@
 from transformers import BertTokenizerFast
-from transformers import pipeline, AutoModelForTokenClassification, BertTokenizerFast 
+from transformers import pipeline, AutoModelForTokenClassification, BertTokenizerFast
 import os
 import torch
 import sys
@@ -20,7 +20,7 @@ segmentation_device="cpu"
 if torch.cuda.is_available():
     if torch.cuda.device_count()>0:
         int_segmentation_device=0
-        segmentation_device="cuda:0"        
+        segmentation_device="cuda:0"
 
 segmentation_tokenizer=None
 segmentation_model=None
@@ -110,23 +110,19 @@ def main():
     global use_single_new_line
     global use_only_beginning
     global batch_size
- 
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", dest="filename",
                     help="single file to process", metavar="FILE")
     parser.add_argument("-d", "--dir", dest="dirname",
                     help="directory to process each file in it recursively. This option uses only the beginning of each file in identification.", metavar="FILE")
-    parser.add_argument('-b','--batch-size', action="store", default="8",type=str, required=False, help='Batch size for the GPU tasks. Only processed in -o mode.')
+    parser.add_argument('-b','--batch-size', default=8, type=int, required=False,
+                        help='Batch size for the GPU tasks. Only used in -d mode.')
 
     args = parser.parse_args()
+    batch_size=args.batch_size
 
-    if args.batch_size is not None:
-        try:
-            batch_size=int(args.batch_size)
-        except:
-            pass
-
-    if args.filename is not None:
+    if args.filename:
         if os.path.isfile(args.filename):
             load_model()
             lang="err"
@@ -139,7 +135,7 @@ def main():
             eprint("The file " + args.filename + " could not be found.")
             exit(1)
 
-    elif args.dirname is not None:
+    elif args.dirname:
         files = pathlib.Path(args.dirname)
         model_loaded=False
         b=0
