@@ -138,27 +138,32 @@ def main():
             exit(1)
 
     elif args.dirname:
-        files = pathlib.Path(args.dirname)
+        path = pathlib.Path(args.dirname)
         model_loaded=False
         b=0
         my_batch=[]
-        for f in files.iterdir():
-            if not model_loaded:
-                model_loaded = True
-                load_model()
-            if b == batch_size:
-                langs=identify_language([i["content"] for i in my_batch])
-                for i in range(len(my_batch)):
-                    print(my_batch[i]["f_name"] + "\t" + langs[i])
-                my_batch=[]
-                b=0
-            if args.whole_file:
-                my_batch.append({"f_name": str(f),
-                                 "content": get_file_content_full(f)})
-            else:
-                my_batch.append({"f_name": str(f),
-                                 "content": get_file_content(f)})
-            b+=1
+
+        for _, _, files in path.walk():
+            for f in files:
+                if not model_loaded:
+                    model_loaded = True
+                    load_model()
+
+                if b == batch_size:
+                    langs=identify_language([i["content"] for i in my_batch])
+                    for i in range(len(my_batch)):
+                        print(my_batch[i]["f_name"] + "\t" + langs[i])
+                    my_batch=[]
+                    b=0
+
+                if args.whole_file:
+                    my_batch.append({"f_name": str(f),
+                                     "content": get_file_content_full(f)})
+                else:
+                    my_batch.append({"f_name": str(f),
+                                     "content": get_file_content(f)})
+                b+=1
+
         if b>0:
             langs=identify_language([i["content"] for i in my_batch])
             for i in range(len(my_batch)):
