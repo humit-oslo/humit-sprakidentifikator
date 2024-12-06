@@ -113,11 +113,13 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", dest="filename",
-                    help="single file to process", metavar="FILE")
+                    help="Single file to process.", metavar="FILE")
     parser.add_argument("-d", "--dir", dest="dirname",
-                    help="directory to process each file in it recursively. This option uses only the beginning of each file in identification.", metavar="FILE")
+                    help="Directory to process each file in it recursively. This option uses only the beginning of each file in identification.", metavar="FILE")
     parser.add_argument("-b","--batch-size", default=8, type=int, required=False,
                         help="Batch size for the GPU tasks. Only used in -d mode.")
+    parser.add_argument("-w", "--whole-file", action="store_true",
+                        help="Analyze the whole file when used with -d.")
 
     args = parser.parse_args()
     batch_size=args.batch_size
@@ -136,22 +138,32 @@ def main():
             exit(1)
 
     elif args.dirname:
-        files = pathlib.Path(args.dirname)
+        path = pathlib.Path(args.dirname)
         model_loaded=False
         b=0
         my_batch=[]
-        for f in files.iterdir():
-            if not model_loaded:
-                model_loaded = True
-                load_model()
-            if b == batch_size:
-                langs=identify_language([i["content"] for i in my_batch])
-                for i in range(len(my_batch)):
-                    print(my_batch[i]["f_name"] + "\t" + langs[i])
-                my_batch=[]
-                b=0
-            my_batch.append({"f_name":str(f), "content":get_file_content(f) })
-            b+=1
+
+        for dir_path, _, files in path.walk():
+            for f in files:
+                if not model_loaded:
+                    model_loaded = True
+                    load_model()
+
+                if b == batch_size:
+                    langs=identify_language([i["content"] for i in my_batch])
+                    for i in range(len(my_batch)):
+                        print(my_batch[i]["f_name"] + "\t" + langs[i])
+                    my_batch=[]
+                    b=0
+
+                if args.whole_file:
+                    my_batch.append({"f_name": str(dir_path/f),
+                                     "content": get_file_content_full(dir_path/f)})
+                else:
+                    my_batch.append({"f_name": str(dir_path/f),
+                                     "content": get_file_content(dir_path/f)})
+                b+=1
+
         if b>0:
             langs=identify_language([i["content"] for i in my_batch])
             for i in range(len(my_batch)):
