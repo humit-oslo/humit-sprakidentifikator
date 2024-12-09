@@ -143,7 +143,7 @@ def main():
         b=0
         my_batch=[]
 
-        for dir_path, _, files in path.walk():
+        for dir_path, _, files in os.walk(path):
             for f in files:
                 if not model_loaded:
                     model_loaded = True
@@ -156,12 +156,13 @@ def main():
                     my_batch=[]
                     b=0
 
+                f_path = os.path.join(dir_path, f)
                 if args.whole_file:
-                    my_batch.append({"f_name": str(dir_path/f),
-                                     "content": get_file_content_full(dir_path/f)})
+                    my_batch.append({"f_name": f_path,
+                                     "content": get_file_content_full(f_path)})
                 else:
-                    my_batch.append({"f_name": str(dir_path/f),
-                                     "content": get_file_content(dir_path/f)})
+                    my_batch.append({"f_name": f_path,
+                                     "content": get_file_content(f_path)})
                 b+=1
 
         if b>0:
